@@ -19,10 +19,12 @@ import it.paofos.spring5recipeapp.domain.UnitOfMeasure;
 import it.paofos.spring5recipeapp.repositories.CategoryRepository;
 import it.paofos.spring5recipeapp.repositories.RecipeRepository;
 import it.paofos.spring5recipeapp.repositories.UnitOfMeasureRepository;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * Created by jt on 6/13/17.
  */
+@Slf4j
 @Component
 public class RecipeBootstrap implements ApplicationListener<ContextRefreshedEvent> {
 
@@ -41,6 +43,7 @@ public class RecipeBootstrap implements ApplicationListener<ContextRefreshedEven
 	@Transactional
 	public void onApplicationEvent(ContextRefreshedEvent event) {
 		recipeRepository.saveAll(getRecipes());
+		log.debug("Loading Bootstrap Data");
 	}
 
 	private List<Recipe> getRecipes() {
