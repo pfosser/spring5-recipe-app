@@ -12,6 +12,7 @@ import java.util.Set;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.ui.Model;
@@ -39,15 +40,27 @@ class IndexControllerTest {
 
 	@Test
 	void testGetIndexPage() {
-		Recipe recipe = new Recipe();
+		
+		//given
 		Set<Recipe> recipesData = new HashSet<>();
+		recipesData.add(new Recipe());
+		Recipe recipe = new Recipe();
+		recipe.setId(1L);
 		recipesData.add(recipe);
 		
 		when(recipeService.getRecipes()).thenReturn(recipesData);
 
-		assertEquals("index", indexController.getIndexPage(model));
+		ArgumentCaptor<Set<Recipe>> argumentCaptor = ArgumentCaptor.forClass(Set.class);
+
+		//when
+		String viewName = indexController.getIndexPage(model);
+		
+		//then
+		assertEquals("index", viewName);
 		verify(recipeService, times(1)).getRecipes();
-		verify(model, times(1)).addAttribute(eq("recipes"), anySet());
+		verify(model, times(1)).addAttribute(eq("recipes"), argumentCaptor.capture());
+		Set<Recipe> setInController = argumentCaptor.getValue();
+		assertEquals(2, setInController.size());
 	}
 
 }
