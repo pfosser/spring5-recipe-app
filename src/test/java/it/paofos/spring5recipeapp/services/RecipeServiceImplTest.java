@@ -17,6 +17,8 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
+import it.paofos.spring5recipeapp.converters.RecipeCommandToRecipe;
+import it.paofos.spring5recipeapp.converters.RecipeToRecipeCommand;
 import it.paofos.spring5recipeapp.domain.Recipe;
 import it.paofos.spring5recipeapp.repositories.RecipeRepository;
 
@@ -26,12 +28,18 @@ class RecipeServiceImplTest {
 
 	@Mock
 	RecipeRepository recipeRepository;
+	
+	@Mock
+	RecipeToRecipeCommand recipeToRecipeCommand;
+
+	@Mock
+	RecipeCommandToRecipe recipeCommandToRecipe;
 
 	@BeforeEach
 	void setUp() {
 		MockitoAnnotations.openMocks(this);
 
-		recipeService = new RecipeServiceImpl(recipeRepository);
+		recipeService = new RecipeServiceImpl(recipeRepository, recipeCommandToRecipe, recipeToRecipeCommand);
 	}
 
 	@Test
@@ -39,11 +47,11 @@ class RecipeServiceImplTest {
 		Recipe recipe = new Recipe();
 		recipe.setId(1L);
 		Optional<Recipe> recipeOptional = Optional.of(recipe);
-		
+
 		when(recipeRepository.findById(anyLong())).thenReturn(recipeOptional);
-		
+
 		Recipe recipeReturned = recipeService.findById(1L);
-		
+
 		assertNotNull(recipeReturned, "Null recipe returned");
 		verify(recipeRepository, times(1)).findById(anyLong());
 		verify(recipeRepository, never()).findAll();
@@ -61,6 +69,7 @@ class RecipeServiceImplTest {
 
 		assertEquals(1, recipes.size());
 		verify(recipeRepository, times(1)).findAll();
+		verify(recipeRepository, never()).findById(anyLong());
 	}
 
 }
