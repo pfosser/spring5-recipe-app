@@ -2,6 +2,7 @@ package it.paofos.spring5recipeapp.services;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
@@ -17,6 +18,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
+import it.paofos.spring5recipeapp.commands.RecipeCommand;
 import it.paofos.spring5recipeapp.converters.RecipeCommandToRecipe;
 import it.paofos.spring5recipeapp.converters.RecipeToRecipeCommand;
 import it.paofos.spring5recipeapp.domain.Recipe;
@@ -28,7 +30,7 @@ class RecipeServiceImplTest {
 
 	@Mock
 	RecipeRepository recipeRepository;
-	
+
 	@Mock
 	RecipeToRecipeCommand recipeToRecipeCommand;
 
@@ -53,6 +55,26 @@ class RecipeServiceImplTest {
 		Recipe recipeReturned = recipeService.findById(1L);
 
 		assertNotNull(recipeReturned, "Null recipe returned");
+		verify(recipeRepository, times(1)).findById(anyLong());
+		verify(recipeRepository, never()).findAll();
+	}
+
+	@Test
+	public void testGetRecipeCoomandById() throws Exception {
+		Recipe recipe = new Recipe();
+		recipe.setId(1L);
+		Optional<Recipe> recipeOptional = Optional.of(recipe);
+
+		when(recipeRepository.findById(anyLong())).thenReturn(recipeOptional);
+
+		RecipeCommand recipeCommand = new RecipeCommand();
+		recipeCommand.setId(1L);
+
+		when(recipeToRecipeCommand.convert(any())).thenReturn(recipeCommand);
+
+		RecipeCommand commandById = recipeService.findCommandById(1L);
+
+		assertNotNull(commandById, "Null recipe returned");
 		verify(recipeRepository, times(1)).findById(anyLong());
 		verify(recipeRepository, never()).findAll();
 	}
