@@ -11,6 +11,7 @@ import it.paofos.spring5recipeapp.commands.RecipeCommand;
 import it.paofos.spring5recipeapp.converters.RecipeCommandToRecipe;
 import it.paofos.spring5recipeapp.converters.RecipeToRecipeCommand;
 import it.paofos.spring5recipeapp.domain.Recipe;
+import it.paofos.spring5recipeapp.exceptions.NotFoundException;
 import it.paofos.spring5recipeapp.repositories.RecipeRepository;
 import lombok.extern.slf4j.Slf4j;
 
@@ -44,7 +45,7 @@ public class RecipeServiceImpl implements RecipeService {
 		Optional<Recipe> recipeOptional = recipeRepository.findById(id);
 
 		if (!recipeOptional.isPresent()) {
-			throw new RuntimeException("Recipe Not Found");
+			throw new NotFoundException("Recipe Not Found");
 		}
 
 		return recipeOptional.get();

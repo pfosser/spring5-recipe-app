@@ -2,6 +2,7 @@ package it.paofos.spring5recipeapp.services;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.never;
@@ -22,6 +23,7 @@ import it.paofos.spring5recipeapp.commands.RecipeCommand;
 import it.paofos.spring5recipeapp.converters.RecipeCommandToRecipe;
 import it.paofos.spring5recipeapp.converters.RecipeToRecipeCommand;
 import it.paofos.spring5recipeapp.domain.Recipe;
+import it.paofos.spring5recipeapp.exceptions.NotFoundException;
 import it.paofos.spring5recipeapp.repositories.RecipeRepository;
 
 class RecipeServiceImplTest {
@@ -57,6 +59,15 @@ class RecipeServiceImplTest {
 		assertNotNull(recipeReturned, "Null recipe returned");
 		verify(recipeRepository, times(1)).findById(anyLong());
 		verify(recipeRepository, never()).findAll();
+	}
+
+	@Test
+	void getRecipeByIdTestNotFound() throws Exception {
+		Optional<Recipe> recipeOptional = Optional.empty();
+		
+		when(recipeRepository.findById(anyLong())).thenReturn(recipeOptional);
+		
+		assertThrows(NotFoundException.class, () -> recipeService.findById(1L));
 	}
 
 	@Test

@@ -21,6 +21,7 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import it.paofos.spring5recipeapp.commands.RecipeCommand;
 import it.paofos.spring5recipeapp.domain.Recipe;
+import it.paofos.spring5recipeapp.exceptions.NotFoundException;
 import it.paofos.spring5recipeapp.services.RecipeService;
 
 class RecipeControllerTest {
@@ -53,6 +54,15 @@ class RecipeControllerTest {
 				.andExpect(status().isOk())//
 				.andExpect(view().name("recipe/show"))//
 				.andExpect(model().attributeExists("recipe"));
+	}
+
+	@Test
+	void getRecipeNotFound() throws Exception {
+
+		when(recipeService.findById(anyLong())).thenThrow(NotFoundException.class);
+
+		mockMvc.perform(get("/recipe/1/show"))//
+				.andExpect(status().isNotFound());
 	}
 
 	@Test
@@ -93,7 +103,7 @@ class RecipeControllerTest {
 		mockMvc.perform(get("/recipe/1/delete"))//
 				.andExpect(status().is3xxRedirection())//
 				.andExpect(view().name("redirect:/"));
-		
+
 		verify(recipeService, times(1)).deleteById(anyLong());
 	}
 }
