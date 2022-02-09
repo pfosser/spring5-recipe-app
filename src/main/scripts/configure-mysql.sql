@@ -3,8 +3,8 @@
 
 # connect to mysql and run as root user
 #Create Databases
-CREATE DATABASE sfg_dev;
-CREATE DATABASE sfg_prod;
+CREATE DATABASE sgf_dev;
+CREATE DATABASE sgf_prod;
 
 #Note. In the following statements, the specification of the '%' host is needed for running mysql in a container.
 # In that situation, from the point of view of mysql, the connection from outside the container comes from a different host
