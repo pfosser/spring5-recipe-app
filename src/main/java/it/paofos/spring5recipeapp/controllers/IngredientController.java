@@ -8,7 +8,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
 import it.paofos.spring5recipeapp.commands.IngredientCommand;
-import it.paofos.spring5recipeapp.commands.RecipeCommand;
 import it.paofos.spring5recipeapp.commands.UnitOfMeasureCommand;
 import it.paofos.spring5recipeapp.services.IngredientService;
 import it.paofos.spring5recipeapp.services.RecipeService;
@@ -62,7 +61,7 @@ public class IngredientController {
 	public String newRecipeIngredient(@PathVariable String recipeId, Model model) {
 
 		// make sure we have a good id value
-		RecipeCommand recipeCommand = recipeService.findCommandById(Long.valueOf(recipeId));
+		recipeService.findCommandById(Long.valueOf(recipeId));
 		// todo raise exception if null
 
 		// need to return back parent id for hidden form property
